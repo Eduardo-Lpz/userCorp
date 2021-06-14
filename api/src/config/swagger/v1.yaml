@@ -1,0 +1,192 @@
+swagger: "2.0"
+info:
+  description: "REST API"
+  version: "2.0.0"
+  title: "UserCorp"
+  contact:
+    email: "jramos@arkusnexus.com"
+host: "localhost:3000"
+basePath: "/api/v1"
+tags:
+- name: "users"
+  description: "Everything about your trainings."
+  externalDocs:
+    description: "Find out more"
+    url: "http://swagger.io"
+- name: "admin"
+  description: "admin"
+schemes:
+- "http"
+- "https"
+# Authorization: Bearer bearerAuth
+paths:
+  /api/v1/users/:
+    get:
+      tags:
+      - "users"
+      summary: "Finds all users"
+      description: "Gets all users"
+      produces:
+      - "application/json"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Users"
+        "400":
+          description: "Invalid status value"
+    post:
+      tags:
+      - "users"
+      summary: "Add a new user"
+      description: ""
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "User object that needs to be added."
+        required: true
+        schema:
+          $ref: "#/definitions/NewUser"
+      responses:
+        "405":
+          description: "Invalid input"
+      security:
+        - bearerAuth: []
+  /api/v1/users/{userId}/:
+    put:
+      tags:
+      - "users"
+      summary: "Update an existing user"
+      description: ""
+      operationId: "updateUser"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+        - name: "userId"
+          in: "path"
+          description: "User id to be updated."
+          required: true
+          type: "integer"
+          format: "int64"
+        - in: "body"
+          name: "body"
+          description: "User object."
+          required: true
+          schema:
+            $ref: "#/definitions/NewUser"
+      responses:
+        "400":
+          description: "Invalid data supplied"
+        "404":
+          description: "User not found"
+        "405":
+          description: "Validation exception"
+      security:
+        - bearerAuth: []
+    delete:
+      tags:
+      - "users"
+      summary: "Deletes a User"
+      description: ""
+      operationId: "deleteUser"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "userId"
+        in: "path"
+        description: "User id to delete"
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "User not found"
+      security:
+        - bearerAuth: []
+
+  /admin/login:
+    post:
+      tags:
+      - "admin"
+      summary: "Logs admin into the system."
+      description: "Logs admin."
+      operationId: "loginAdmin"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Admin that needs to log in."
+        required: true
+        schema:
+          $ref: "#/definitions/Admin"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "string"
+          headers:
+            X-Rate-Limit:
+              type: "integer"
+              format: "int32"
+              description: "calls per hour allowed by the user"
+            X-Expires-After:
+              type: "string"
+              format: "date-time"
+              description: "date in UTC when token expires"
+        "400":
+          description: "Invalid username/password supplied"
+definitions:
+  Admin:
+    type: "object"
+    properties:
+      email:
+        type: "string"
+      password:
+        type: "string"
+  Users:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      first_name:
+        type: "string"
+        example: "John"
+      last_name:
+        type: "string"
+        example: "Doe"
+      email:
+        type: "string"
+        example: "jdoe@example.com"
+  NewUser:
+    type: "object"
+    required:
+    - "user_id"
+    - "course_id"
+    - "training_type_id"
+    properties:
+      first_name:
+        type: "string"
+        example: "John"
+      last_name:
+        type: "string"
+        example: "Doe"
+      email:
+        type: "string"
+        example: "jdoe@example.com"
+securityDefinitions:
+  bearerAuth:
+    type: apiKey
+    name: Authorization
+    in: header

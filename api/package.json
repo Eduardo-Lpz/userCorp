@@ -1,0 +1,47 @@
+{
+  "name": "user-corp",
+  "version": "1.0.0",
+  "description": "REST api",
+  "main": "src",
+  "scripts": {
+    "start": "nodemon -r dotenv/config --experimental-specifier-resolution=node src/index.js",
+    "test": "mocha src/test -r dotenv/config --timeout 10000 --experimental-specifier-resolution=node",
+    "nyctest": "nyc --all --reporter=lcov --reporter=text  --lines 95 --functions 90 npm run test"
+  },
+  "type": "module",
+  "author": "Eduardo Lopez",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "babel-cli": "^6.26.0",
+    "babel-preset-es2015": "^6.24.1",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-validator": "^6.9.2",
+    "express-winston": "^4.0.5",
+    "jwt-simple": "^0.5.6",
+    "lodash": "^4.17.21",
+    "moment": "^2.29.1",
+    "morgan": "^1.10.0",
+    "pg": "^8.6.0",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.6.2",
+    "swagger-ui-express": "^4.1.6",
+    "winston": "^3.3.3",
+    "yamljs": "^0.3.0"
+  },
+  "devDependencies": {
+    "babel-plugin-istanbul": "^6.0.0",
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
+    "eslint": "^7.17.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.22.1",
+    "mocha": "^8.2.1",
+    "nodemon": "^2.0.6",
+    "nyc": "^15.1.0"
+  }
+}
