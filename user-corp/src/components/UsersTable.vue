@@ -32,12 +32,12 @@
           <v-btn color="info darken-3 info--text" @click="dialog = false">
             Cancel
           </v-btn>
-          <v-btn color="error" @click="removeTraining()"> Delete </v-btn>
+          <v-btn color="error" @click="removeUser()"> Delete </v-btn>
         </v-card-actions>
       </v-card>
       <users-edit
         v-if="dialogMode === 'edit'"
-        :userData="trainingToUpdate"
+        :user="userToUpdate"
         @usersEdit:cancel="hideDialog()"
         @usersEdit:update="
           showSnackbar = true;
@@ -115,7 +115,7 @@
                 </v-list-item-icon>
                 <v-list-item-content>
                   <v-list-item-title class="info--text"
-                    >Edit training.</v-list-item-title
+                    >Edit user.</v-list-item-title
                   >
                 </v-list-item-content>
               </v-list-item>
@@ -128,7 +128,7 @@
                 </v-list-item-icon>
                 <v-list-item-content>
                   <v-list-item-title class="info--text"
-                    >Delete training.</v-list-item-title
+                    >Delete user.</v-list-item-title
                   >
                 </v-list-item-content>
               </v-list-item>
@@ -216,7 +216,7 @@ export default {
           class: 'info--text text-lg-body-1 tertiary',
         },
       ],
-      trainingToUpdate: [],
+      userToUpdate: [],
     };
   },
   computed: {
@@ -243,11 +243,11 @@ export default {
     ...mapUsersActions(['createUser', 'deleteUser']),
     changeDialogMode(userData, dialogMode) {
       if (dialogMode === 'delete') this.removeData = userData;
-      if (dialogMode === 'edit') this.trainingToUpdate = userData;
+      if (dialogMode === 'edit') this.userToUpdate = userData;
       this.dialogMode = dialogMode;
       this.dialog = true;
     },
-    removeTraining() {
+    removeUser() {
       this.deleteUser(this.removeData);
       this.dialog = false;
       this.showSnackbar = true;
@@ -256,8 +256,7 @@ export default {
       this.dialogMode = '';
       this.dialog = false;
     },
-    addNewTraining(user) {
-      console.log(newUser);
+    addNewUser(user) {
       const newUser = {
         first_name: user.firstName,
         last_name: user.lastName,

@@ -2,7 +2,7 @@
   <v-card class='tertiary info--text'>
     <v-card-title class='display-1'> Edit user </v-card-title>
     <v-text-field
-      :value='this.user.firstName'
+      :value='userData.firstName'
       :error-messages='firstNameErrors'
       label='Name'
       class='px-4'
@@ -10,10 +10,10 @@
       dark
       required
       @keyup='setUserFirstName($event.target.value)'
-      @blur='$v.user.firstName.$touch()'
+      @blur='$v.userData.firstName.$touch()'
     ></v-text-field>
     <v-text-field
-      :value='user.lastName'
+      :value='userData.lastName'
       :error-messages='lastNameErrors'
       label='Last Name'
       class='px-4'
@@ -21,24 +21,21 @@
       dark
       required
       @keyup='setUserLastName($event.target.value)'
-      @blur='$v.user.lastName.$touch()'
+      @blur='$v.userData.lastName.$touch()'
     ></v-text-field>
     <v-text-field
-      :disabled='this.userExists'
-      :value='user.email'
-      :error-messages='emailErrors'
+      :disabled='true'
+      :value='userData.email'
       label='E-mail'
       class='px-4'
       color='secondary'
       dark
       required
-      @keyup='setUserEmail($event.target.value)'
-      @blur='$v.user.email.$touch()'
     ></v-text-field>
     <v-card-actions>
       <v-spacer></v-spacer>
       <v-btn
-        :disabled='this.$v.user.$invalid'
+        :disabled='this.$v.userData.$invalid'
         class='text-capitalize'
         color='secondary'
         dark
@@ -53,7 +50,7 @@
 
 <script>
 import { validationMixin } from 'vuelidate';
-import { required, email } from 'vuelidate/lib/validators';
+import { required } from 'vuelidate/lib/validators';
 import { createNamespacedHelpers } from 'vuex';
 
 const { mapActions: mapUsersActions } =
@@ -63,63 +60,58 @@ export default {
   mixins: [validationMixin],
   name: 'UsersCreate',
   props: {
-    userData: {
+    user: {
       type: Object,
     },
   },
   computed: {
+    userData() {
+      return {
+        firstName: this.user.first_name,
+        lastName: this.user.last_name,
+        email: this.user.email
+      }
+    },
     firstNameErrors() {
       const errors = [];
-      if (!this.$v.user.firstName.$dirty) return errors;
-      !this.$v.user.firstName.required && errors.push('Name is required.');
+      if (!this.$v.userData.firstName.$dirty) return errors;
+      !this.$v.userData.firstName.required && errors.push('Name is required.');
       return errors;
     },
     lastNameErrors() {
       const errors = [];
-      if (!this.$v.user.lastName.$dirty) return errors;
-      !this.$v.user.lastName.required && errors.push('Name is required.');
-      return errors;
-    },
-    emailErrors() {
-      const errors = [];
-      if (!this.$v.user.email.$dirty) return errors;
-      !this.$v.user.email.email && errors.push('Must be valid e-mail');
-      !this.$v.user.email.required && errors.push('E-mail is required');
+      if (!this.$v.userData.lastName.$dirty) return errors;
+      !this.$v.userData.lastName.required && errors.push('Name is required.');
       return errors;
     },
   },
   validations: {
-    user: {
+    userData: {
       firstName: { required },
       lastName: { required },
-      email: { required, email },
     },
   },
   methods: {
     ...mapUsersActions(['createUser', 'updateUser']),
     setUserFirstName(value) {
-      this.user.firstName = value;
+      this.userData.firstName = value;
     },
     setUserLastName(value) {
-      this.user.lastName = value;
-    },
-    setUserEmail(value) {
-      this.user.email = value;
+      this.userData.lastName = value;
     },
     async submit() {
       const data = {
-        id: this.userData.id,
-        first_name: this.user.firstName,
-        last_name: this.user.lastName,
+        id: this.user.id,
+        first_name: this.userData.firstName,
+        last_name: this.userData.lastName,
       };
       this.updateUser(data);
       this.$emit('usersEdit:update');
     },
     clear() {
       this.$v.$reset();
-      this.user.firstName = '';
-      this.user.lastName = '';
-      this.user.email = '';
+      this.userData.firstName = '';
+      this.userData.lastName = '';
 
       this.$emit('usersEdit:cancel');
     },

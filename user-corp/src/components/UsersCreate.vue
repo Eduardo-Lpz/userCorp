@@ -1,10 +1,9 @@
 <template>
   <v-card class='tertiary info--text'>
-    <v-card-title class='display-1'> Add a new training </v-card-title>
+    <v-card-title class='display-1'> Add a new user </v-card-title>
     <v-text-field
       :value='user.firstName'
       :error-messages='firstNameErrors'
-      :counter='10'
       label='Name'
       class='px-4'
       color='secondary'
@@ -46,7 +45,7 @@
       >
         submit
       </v-btn>
-      <v-btn @click='clear'> clear </v-btn>
+      <v-btn @click='clear'> Cancel </v-btn>
     </v-card-actions>
   </v-card>
 </template>
@@ -62,10 +61,6 @@ const { mapActions: mapUsersActions } =
 export default {
   mixins: [validationMixin],
   name: 'UsersCreate',
-  created() {
-    console.log(this.userExists);
-    console.log(this.user);
-  },
   data: () => ({
     user: {
       firstName: '',
@@ -119,6 +114,12 @@ export default {
         email: this.user.email,
       };
       await this.createUser(newUser);
+
+      this.user.firstName = '';
+      this.user.lastName = '';
+      this.user.email = '';
+      this.$v.$reset();
+
       this.$emit('usersCreate:create');
     },
     clear() {

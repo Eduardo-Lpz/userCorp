@@ -62,13 +62,9 @@ export default {
     ...mapUsersActions(['fetchUsers']),
     validateSession() {
       this.verifyToken();
-      if (this.getIsAuthenticated) {
-        console.log('LOGED');
-      }
-      else {
-        console.log('NOT LOGED');
-      this.$router.push('/login');
-      }
+      if (!this.getIsAuthenticated)
+        this.$router.push('/login');
+
     },
     logOut() {
       this.logOutUser();
